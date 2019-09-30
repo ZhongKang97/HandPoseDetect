@@ -1,0 +1,8 @@
+add_library(Seger ColorBased_Seger.cpp)
+target_link_libraries(Seger ${THIRD_PARTY_LIBS})
+add_executable(runDemo_Color runDemo_Color.cpp)
+target_link_libraries(runDemo_Color Seger)
+add_executable(testBoost testBoost.cpp)
+target_link_libraries(testBoost ${THIRD_PARTY_LIBS})
+add_executable(test_serial testBoost_Serial.cpp)
+target_link_libraries(test_serial ${THIRD_PARTY_LIBS})

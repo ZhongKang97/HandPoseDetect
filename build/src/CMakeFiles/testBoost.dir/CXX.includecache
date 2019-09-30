@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zhongkang97/CODEing/HandPoseDetect/src/testBoost.cpp
+iostream
+-
+boost/lexical_cast.hpp
+-
+

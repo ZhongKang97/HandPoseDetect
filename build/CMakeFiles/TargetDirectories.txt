@@ -1,0 +1,8 @@
+/home/zhongkang97/CODEing/HandPoseDetect/build/CMakeFiles/edit_cache.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/CMakeFiles/rebuild_cache.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/src/CMakeFiles/edit_cache.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/src/CMakeFiles/Seger.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/src/CMakeFiles/runDemo_Color.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/src/CMakeFiles/testBoost.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/src/CMakeFiles/rebuild_cache.dir
+/home/zhongkang97/CODEing/HandPoseDetect/build/src/CMakeFiles/test_serial.dir
