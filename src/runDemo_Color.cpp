@@ -20,8 +20,8 @@ int main(int argc, char **argv)
 	Seger.setLowTreash(cv::Scalar(20, 20, 20));
 	Seger.setHighTreash(cv::Scalar(20, 20, 20));
 	io_service iosev;
-    serial_port sp(iosev,"/dev/ttyS2");
-    sp.set_option(serial_port::baud_rate(115200));
+    serial_port sp(iosev,"/dev/ttyUSB0");
+    sp.set_option(serial_port::baud_rate(9600));
     sp.set_option(serial_port::flow_control(serial_port::flow_control::none));
     sp.set_option(serial_port::parity(serial_port::parity::none));
     sp.set_option(serial_port::stop_bits(serial_port::stop_bits::one));
@@ -35,16 +35,23 @@ int main(int argc, char **argv)
 		cv::Scalar bestTargetColor;
 		while (true)
 		{
-			Seger.setTargetColor(cv::Scalar(g_targetColor_B, g_targetColor_G, g_targetColor_R));
+			char buf[1];
+			read(sp,buffer(buf));
+			cout<<"recevied : "<<buf[0]<<endl;
 			cap >> frame;
 			if (frame.empty())
 				break;
+			if( buf[0]== 'B' )
+			{
+			Seger.setTargetColor(cv::Scalar(g_targetColor_B, g_targetColor_G, g_targetColor_R));
+			
 
 			cv::Rect object = Seger.runSegment(frame);
 			if (object.x > 0)
 			{
 				if (initColor)
 				{
+					
 					initColor = false;
 					maxArea = object.area();
 					cv::Mat roi = frame(cv::Rect(object.x, object.y, 6, 6));
@@ -68,21 +75,23 @@ int main(int argc, char **argv)
 				}
 				rectangle(frame, object, cv::Scalar(0, 0, 255));
 				circle(frame, cv::Point(object.x + object.width / 2.0, object.y + object.height / 2.0), 5, cv::Scalar(0, 0, 255), cv::FILLED);
-				int font_face = cv::FONT_HERSHEY_COMPLEX; //����
-				double font_scale = 1;					  //�����С
-				int thickness = 2;						  //�߿�
+				int font_face = cv::FONT_HERSHEY_COMPLEX; 
+				double font_scale = 1;					  
+				int thickness = 2;						  
 				std::string text_d_x = cv::format("HandPose_X: %f ", object.x + object.width / 2.0);
 				std::string text_d_y = cv::format("HandPose_Y: %f ", object.y + object.height / 2.0);
 				putText(frame, text_d_x, cv::Point(0, 30), font_face, font_scale, cv::Scalar(255, 0, 135), thickness, 8, 0);
 				putText(frame, text_d_y, cv::Point(0, 60), font_face, font_scale, cv::Scalar(255, 0, 135), thickness, 8, 0);
-				string testData = cv::format("%-8.2f%-8.2f%-8.2f", object.x + object.width / 2.0, object.y + object.height / 2.0, 777.0);
+				//string testData = cv::format("%-8.2f%-8.2f%-8.2f", object.x + object.width / 2.0, object.y + object.height / 2.0, 777.0);
+				string testData = cv::format("%-8.2f%-8.2f%-8.2f", 2260.0, 0.0, -1900.0);
 				write(sp,buffer(testData.data(),testData.size()));
 				std::cout << testData << endl;
 			}
 			imshow("frame", frame);
-			char key = cv::waitKey(1);
+			char key = cv::waitKey(10);
 			if (key == 27)
 				break;
+			}
 		}
 	}
 	iosev.run();
