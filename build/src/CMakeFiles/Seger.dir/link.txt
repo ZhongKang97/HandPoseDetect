@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../lib/libSeger.a  CMakeFiles/Seger.dir/ColorBased_Seger.cpp.o
-/usr/bin/ranlib ../../lib/libSeger.a

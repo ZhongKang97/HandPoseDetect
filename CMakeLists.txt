@@ -28,10 +28,21 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 #Threads
 #find_package(Threads)
 
+#python2.7
+set(Python2_Version 2.7)
+set(Python2_INCLUDE_DIRS "/usr/include/python2.7/")
+set(Python2_LIBS "/usr/lib/python2.7/config-arm-linux-gnueabihf/libpython2.7.so")
+message(STATUS "Python2 library status:")
+message(STATUS "    version: ${Python2_Version}")
+message(STATUS "    libraries: ${Python2_LIBS}")
+message(STATUS "    include path: ${Python2_INCLUDE_DIRS}")
+include_directories(${Python2_INCLUDE_DIRS})
+
 set( THIRD_PARTY_LIBS 
     ${OpenCV_LIBS}
   #  ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
+    ${Python2_LIBS}
 )
 ############### source and test ######################
 include_directories(${PROJECT_SOURCE_DIR}/include )
