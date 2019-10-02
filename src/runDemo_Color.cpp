@@ -1,6 +1,10 @@
 #include "../include/ColorBased_Seger.h"
+#include<Python.h>
+#include<iostream>
+#include<string>
 #include<boost/asio.hpp>
 #include<boost/bind.hpp>
+using namespace std;
 using namespace boost::asio;
 int g_targetColor_B = 186;
 int g_targetColor_G = 136;
@@ -27,6 +31,21 @@ int main(int argc, char **argv)
     sp.set_option(serial_port::stop_bits(serial_port::stop_bits::one));
     sp.set_option(serial_port::character_size(8));
     
+	Py_Initialize();
+    const char * cstr_cmd = "sys.path.append('/home/pi/CODEing/HandPoseDetect/src')";
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString(cstr_cmd);
+    //python 2.7 和 python 3.5是有区别的。
+    //python 3.5需要用wchar_t
+    PyObject * p_Moudle,* p_Func;
+    PyObject *p_Value;
+    p_Moudle = PyImport_ImportModule("get_Distance_TFmini_Plus");
+	if(p_Moudle == NULL) cout<<"p_Moudle import failed"<<endl;
+	else 
+    {
+        p_Func = PyObject_GetAttrString(p_Moudle,"getTFminiData");
+        if(p_Func == NULL) cout<<"p_Func import failed"<<endl;
+	}
 	cv::VideoCapture cap(0);
 	if (cap.isOpened())
 	{
@@ -35,6 +54,7 @@ int main(int argc, char **argv)
 		cv::Scalar bestTargetColor;
 		while (true)
 		{
+			int distance=0;
 			char buf[1];
 			read(sp,buffer(buf));
 			cout<<"recevied : "<<buf[0]<<endl;
@@ -44,8 +64,6 @@ int main(int argc, char **argv)
 			if( buf[0]== 'B' )
 			{
 			Seger.setTargetColor(cv::Scalar(g_targetColor_B, g_targetColor_G, g_targetColor_R));
-			
-
 			cv::Rect object = Seger.runSegment(frame);
 			if (object.x > 0)
 			{
@@ -73,6 +91,9 @@ int main(int argc, char **argv)
 						cout << "maxArea is " << maxArea << endl;
 					}
 				}
+				p_Value = PyObject_CallObject(p_Func,NULL);
+                int res= PyInt_AsLong(p_Value);
+				if(res != -1) distance = res;
 				rectangle(frame, object, cv::Scalar(0, 0, 255));
 				circle(frame, cv::Point(object.x + object.width / 2.0, object.y + object.height / 2.0), 5, cv::Scalar(0, 0, 255), cv::FILLED);
 				int font_face = cv::FONT_HERSHEY_COMPLEX; 
@@ -82,8 +103,8 @@ int main(int argc, char **argv)
 				std::string text_d_y = cv::format("HandPose_Y: %f ", object.y + object.height / 2.0);
 				putText(frame, text_d_x, cv::Point(0, 30), font_face, font_scale, cv::Scalar(255, 0, 135), thickness, 8, 0);
 				putText(frame, text_d_y, cv::Point(0, 60), font_face, font_scale, cv::Scalar(255, 0, 135), thickness, 8, 0);
-				//string testData = cv::format("%-8.2f%-8.2f%-8.2f", object.x + object.width / 2.0, object.y + object.height / 2.0, 777.0);
-				string testData = cv::format("%-8.2f%-8.2f%-8.2f", 2260.0, 0.0, -1900.0);
+				string testData = cv::format("%-8.2f%-8.2f%-8.2f", object.x + object.width / 2.0, object.y + object.height / 2.0, distance);
+				//string testData = cv::format("%-8.2f%-8.2f%-8.2f", 2260.0, 0.0, -1900.0);
 				write(sp,buffer(testData.data(),testData.size()));
 				std::cout << testData << endl;
 			}
