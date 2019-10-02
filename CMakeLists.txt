@@ -31,18 +31,30 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 #python2.7
 set(Python2_Version 2.7)
 set(Python2_INCLUDE_DIRS "/usr/include/python2.7/")
-set(Python2_LIBS "/usr/lib/python2.7/config-arm-linux-gnueabihf/libpython2.7.so")
+#set(Python2_LIBS "/usr/lib/python2.7/config-arm-linux-gnueabihf/libpython2.7.so") #for ARM
+set(Python2_LIBS  /usr/lib/python2.7/config-x86_64-linux-gnu/libpython2.7.so) #for X86_64
 message(STATUS "Python2 library status:")
 message(STATUS "    version: ${Python2_Version}")
 message(STATUS "    libraries: ${Python2_LIBS}")
 message(STATUS "    include path: ${Python2_INCLUDE_DIRS}")
 include_directories(${Python2_INCLUDE_DIRS})
 
+#MindVersion SDK support
+set(MindVersionSDK_Version 2.1.0.6)
+set(MindVersionSDK_INCLUDE_DIRS "/usr/include")
+set(MindVersionSDK_LIB "/usr/lib/libMVSDK.so")
+message(STATUS "MindVersionSDK library status:")
+message(STATUS "    version: ${MindVersionSDK_Version}")
+message(STATUS "    libraries: ${MindVersionSDK_LIB}")
+message(STATUS "    include path: ${MindVersionSDK_INCLUDE_DIRS}")
+include_directories(${MindVersionSDK_INCLUDE_DIRS})
+
 set( THIRD_PARTY_LIBS 
     ${OpenCV_LIBS}
   #  ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     ${Python2_LIBS}
+    ${MindVersionSDK_LIB}
 )
 ############### source and test ######################
 include_directories(${PROJECT_SOURCE_DIR}/include )
